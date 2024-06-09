@@ -1,0 +1,52 @@
+<h3 mat-dialog-title>Add Reservation</h3>
+<div mat-dialog-content>
+  <form class="flex flex-col" [formGroup]="resForm">
+    <mat-form-field>
+      <mat-label>Name Surname</mat-label>
+      <input matInput type="text" placeholder="Name Surname" formControlName="nameSurname">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Number of Adults</mat-label>
+      <input matInput type="number" placeholder="Enter number of adults" formControlName="numberOfAdults" (focus)="selectText($event)">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Number of Children</mat-label>
+      <input matInput type="number" placeholder="Enter number of children" formControlName="numberOfChildren" max="3" (focus)="selectText($event)">
+      <mat-error *ngIf="resForm.get('numberOfChildren')?.hasError('max')">
+        Max number of children is 3.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="resForm.get('numberOfChildren')?.value > 0">
+      <mat-label>Child 1</mat-label>
+      <input matInput type="number" placeholder="Child 1" formControlName="child1" (focus)="selectText($event)">
+    </mat-form-field>
+    <mat-form-field *ngIf="resForm.get('numberOfChildren')?.value > 1">
+      <mat-label>Child 1</mat-label>
+      <input matInput type="number" placeholder="Child 2" formControlName="child2" (focus)="selectText($event)">
+    </mat-form-field>
+    <mat-form-field *ngIf="resForm.get('numberOfChildren')?.value > 2">
+      <mat-label>Child 1</mat-label>
+      <input matInput type="number" placeholder="Child 3" formControlName="child3" (focus)="selectText($event)">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Check-in Date</mat-label>
+      <input matInput [matDatepicker]="checkInPicker" formControlName="checkInDate">
+      <mat-datepicker-toggle matSuffix [for]="checkInPicker"></mat-datepicker-toggle>
+      <mat-datepicker #checkInPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Check-out Date</mat-label>
+      <input matInput [matDatepicker]="checkOutPicker" formControlName="checkOutDate">
+      <mat-datepicker-toggle matSuffix [for]="checkOutPicker"></mat-datepicker-toggle>
+      <mat-datepicker #checkOutPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Price</mat-label>
+      <input matInput type="number" placeholder="Price" formControlName="price" (focus)="selectText($event)">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-button (click)="saveReservation()">Save</button>
+</div>

@@ -1,0 +1,160 @@
+<div class="flex flex-col flex-auto min-w-0">
+  <div class="flex-auto">
+    <div class="class m-5">
+      <div class="row">
+        <div class="col-2">
+          <mat-form-field>
+            <mat-label>Number of Rooms</mat-label>
+            <input matInput type="number" (focus)="selectText($event)" [(ngModel)]="numberofRoom"/>
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field>
+            <mat-label>Number of Adults</mat-label>
+            <input matInput type="number" (focus)="selectText($event)" [(ngModel)]="numberofAdult"/>
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field>
+            <mat-label>Number of Child</mat-label>
+            <input matInput type="number" (focus)="selectText($event)" [(ngModel)]="numberofChild"/>
+          </mat-form-field>
+        </div>
+        <div class="col-2" *ngIf="numberofChild > 0">
+          <mat-form-field>
+            <mat-label>Child1</mat-label>
+            <input matInput type="number" (focus)="selectText($event)" [(ngModel)]="child1age"/>
+          </mat-form-field>
+        </div>
+        <div class="col-2" *ngIf="numberofChild > 1">
+          <mat-form-field>
+            <mat-label>Child2</mat-label>
+            <input matInput type="number" (focus)="selectText($event)" [(ngModel)]="child2age"/>
+          </mat-form-field>
+        </div>
+        <div class="col-2" *ngIf="numberofChild > 2">
+          <mat-form-field>
+            <mat-label>Child3</mat-label>
+            <input matInput type="number" (focus)="selectText($event)" [(ngModel)]="child3age"/>
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field>
+            <mat-label>Check-in Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="checkInPicker"
+              [(ngModel)]="defaultCheckInDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="checkInPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #checkInPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field>
+            <mat-label>Check-out Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="checkOutPicker"
+              [(ngModel)]="defaultCheckOutDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="checkOutPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #checkOutPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="listReservations()"
+          >
+            List Reservations
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-6">
+    <h3>Reservation Table</h3>
+    <table mat-table [dataSource]="resData">
+      <ng-container matColumnDef="guestName">
+        <th mat-header-cell *matHeaderCellDef>Guest Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.guestName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="adult">
+        <th mat-header-cell *matHeaderCellDef>Adults</th>
+        <td mat-cell *matCellDef="let element">{{ element.adult }}</td>
+      </ng-container>
+      <ng-container matColumnDef="child">
+        <th mat-header-cell *matHeaderCellDef>Child</th>
+        <td mat-cell *matCellDef="let element">{{ element.child }}</td>
+      </ng-container>
+      <ng-container matColumnDef="checkInDate">
+        <th mat-header-cell *matHeaderCellDef>Check-in Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.checkinDate | date:'dd/MM/yyyy' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="checkOutDate">
+        <th mat-header-cell *matHeaderCellDef>Check-out Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.checkoutDate | date:'dd/MM/yyyy'}}</td>
+      </ng-container>
+      <ng-container matColumnDef="roomtypename">
+        <th mat-header-cell *matHeaderCellDef>Room Type</th>
+        <td mat-cell *matCellDef="let element">{{ element.roomTypeName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let element">{{ element.price }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsRes"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsRes"></tr>
+    </table>
+  </div>
+  <div class="col-6">
+    <h3>Room Type Table</h3>
+    <table mat-table [dataSource]="roomTypes">
+      <ng-container matColumnDef="roomTypeName">
+        <th mat-header-cell *matHeaderCellDef>Room Type Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.roomTypeName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="availableRoomCount">
+        <th mat-header-cell *matHeaderCellDef>Available Room Count</th>
+        <td mat-cell *matCellDef="let element">{{ element.availableRoomCount }}</td>
+      </ng-container>
+      <ng-container matColumnDef="roomCount">
+        <th mat-header-cell *matHeaderCellDef>Room Count</th>
+        <td mat-cell *matCellDef="let element">{{ element.roomCount }}</td>
+      </ng-container>
+      <ng-container matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef>Options</th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-label="Options"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="addReservation(element)">
+              Add Reservation
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsRoomTypes"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsRoomTypes"></tr>
+    </table>
+  </div>
+</div>
+
